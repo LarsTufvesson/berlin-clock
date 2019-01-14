@@ -10,7 +10,7 @@ pipeline {
         stage('install and sonar parallel') {
             steps {
                 parallel(install: {
-                    sh "mvn -U clean test cobertura:cobertura -Dcobertura.report.format=xml"
+                    sh "mvn clean test"
                 }, sonar: {
                     sh "mvn sonar:sonar -Dsonar.host.url=${env.SONARQUBE_HOST}"
                 })
@@ -18,7 +18,6 @@ pipeline {
             post {
                 always {
                     junit '**/target/*-reports/TEST-*.xml'
-                    step([$class: 'CoberturaPublisher', coberturaReportFile: 'target/site/cobertura/coverage.xml'])
                 }
             }
         }
